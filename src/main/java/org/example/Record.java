@@ -38,6 +38,10 @@ public class Record implements Comparable<Record>
         return "(" + x + "," + y + ")";
     }
 
+    public String recordToString(){
+        return "" + x + "," + y + "";
+    }
+
     private double sumOfSquare(double x ,double y) {
         return Math.pow(x, 2.0) + Math.pow(y, 2.0);
     }

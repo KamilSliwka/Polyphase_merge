@@ -4,6 +4,9 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        RandomGenerator randomGenerator = new RandomGenerator(10,"test.csv");
+        randomGenerator.generateFileOfRecords();
+        InputRecord input = new InputRecord("test.csv");
+        input.add();
     }
 }

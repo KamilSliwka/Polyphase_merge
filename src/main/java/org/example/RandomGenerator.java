@@ -1,12 +1,13 @@
 package org.example;
 
+import java.io.IOException;
 import java.util.Random;
 
 public class RandomGenerator {
-    int numberOfRecords;
-    String nameFile;
-    double min = 0.0;
-    double max = 100.0;
+    private int numberOfRecords;
+    private String nameFile;
+    private double min = 0.0;
+    private double max = 100.0;
     
     public RandomGenerator(int numberOfRecords, String nameFile) {
         this.numberOfRecords = numberOfRecords;
@@ -21,9 +22,19 @@ public class RandomGenerator {
     }
 
     public void generateFileOfRecords(){
-        for(int i = 0; i < numberOfRecords;i++){
-            Record newRecord = generateRecord();
-            //zapisz do pliku
+        try {
+            CSVWriter writer = new CSVWriter(nameFile ,false);
+            writer.write("X,Y");
+            writer.closeFile();
+            writer = new CSVWriter(nameFile ,true);
+            for (int i = 0; i < numberOfRecords; i++) {
+                Record newRecord = generateRecord();
+                writer.write(newRecord.recordToString());
+            }
+            writer.closeFile();
+        }
+        catch (IOException e){
+                e.printStackTrace();
         }
     }
 }
