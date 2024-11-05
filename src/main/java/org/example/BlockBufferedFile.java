@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class BlockBufferedFile {
+    private String fileName;
 
-    private final int  pageSize = 256;
+    private int pageCounter;
+    private final int  pageSize = 5;
     private  ArrayList<Record> writeBuffer;
 
     private int writeBufferIndex;
@@ -14,21 +16,24 @@ public class BlockBufferedFile {
     private int readBufferIndex;
 
     private int discOperation;
-    public BlockBufferedFile() {
+    public BlockBufferedFile(String fileName) {
+        this.fileName = fileName;
         this.writeBuffer = new ArrayList<>();
         this.writeBufferIndex = 0;
         this.readBuffer = new ArrayList<>();
         this.readBufferIndex = pageSize;
         this.discOperation = 0;
+        this.pageCounter = 0;
     }
 
-    public Record getNextRecord(String fileName){
+    public Record getNextRecord(){
         if(readBufferIndex >= pageSize){
-            loadPage(fileName);
+            loadPage();
             discOperation++;
             readBufferIndex = 0;
+            pageCounter++;
         }
-        if (readBuffer.isEmpty()) {
+        if (readBuffer.size()<=readBufferIndex || readBuffer.isEmpty()) {
             return null; // koniec pliku
         }
         Record newRecord =  readBuffer.get(readBufferIndex);
@@ -36,36 +41,41 @@ public class BlockBufferedFile {
         return newRecord;
     }
 
-    public void setNextRecord(Record record , String fileName){
-        //dodac zapis niepełniej strony
+    public void setNextRecord(Record record ){
+
 
         writeBuffer.add(record);
         writeBufferIndex++;
         if(writeBufferIndex >= pageSize){
-            writePage(fileName);
+            writePage();
             discOperation++;
             writeBufferIndex = 0;
         }
     }
 
-    private void loadPage(String fileName)  {
+    private void loadPage()  {
         readBuffer.clear();
         String line;
         int count = 0;
+        int currentLine =0;
         try {
             CSVReader reader = new CSVReader(fileName);
+            while (currentLine < pageSize*pageCounter && (line = reader.read()) != null) {
+                currentLine++;
+            }
             while ((line = reader.read()) != null && count < pageSize) {
                 String[] values = line.split(","); // Podział linii na wartości
                 Record record = new Record(Double.parseDouble(values[0]), Double.parseDouble(values[1]));
                 readBuffer.add(record);
                 count++;
             }
+            reader.closeFile();
         }
         catch(IOException e){
             e.printStackTrace();
         }
     }
-    private void writePage(String fileName) {
+    private void writePage() {
         int count = 0;
         try {
             CSVWriter writer = new CSVWriter(fileName,true);
@@ -74,10 +84,22 @@ public class BlockBufferedFile {
                 writer.write(record.recordToString());
                 count++;
             }
+            writer.closeFile();
         }
         catch(IOException e){
             e.printStackTrace();
         }
         writeBuffer.clear();
+    }
+
+    public int getDiscOperation() {
+        return discOperation;
+    }
+
+    //zapis niepełniej strony
+    public void writeBufferPage(){
+        writePage();
+        discOperation++;
+        writeBufferIndex = 0;
     }
 }

@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.Objects;
 
+
 public class Record implements Comparable<Record>
 {
     private double x;
@@ -45,10 +46,24 @@ public class Record implements Comparable<Record>
     private double sumOfSquare(double x ,double y) {
         return Math.pow(x, 2.0) + Math.pow(y, 2.0);
     }
+//    @Override
+//    public int compareTo(Record otherRecord) {
+//        double thisSum = sumOfSquare(this.getX(), this.getY());
+//        double otherSum = sumOfSquare(otherRecord.getX(), otherRecord.getY());
+//
+//        if (thisSum > otherSum) {
+//            return 1;
+//        } else if (thisSum < otherSum) {
+//            return -1;
+//        } else {
+//            return 0;
+//        }
+//    }
+
     @Override
     public int compareTo(Record otherRecord) {
-        double thisSum = sumOfSquare(this.getX(), this.getY());
-        double otherSum = sumOfSquare(otherRecord.getX(), otherRecord.getY());
+        double thisSum = this.getX();
+        double otherSum = otherRecord.getX();
 
         if (thisSum > otherSum) {
             return 1;
@@ -58,6 +73,5 @@ public class Record implements Comparable<Record>
             return 0;
         }
     }
-
 
 }

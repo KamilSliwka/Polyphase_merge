@@ -4,9 +4,9 @@ public class App
 {
     public static void main( String[] args )
     {
-        RandomGenerator randomGenerator = new RandomGenerator(10,"test.csv");
+        RandomGenerator randomGenerator = new RandomGenerator(30,"test.csv");
         randomGenerator.generateFileOfRecords();
-        InputRecord input = new InputRecord("test.csv");
-        input.add();
+        Sort sort = new Sort("test.csv");
+        sort.sorting();
     }
 }

@@ -13,4 +13,8 @@ public class CSVReader {
         return reader.readLine();
     }
 
+    public void closeFile() throws IOException{
+        reader.close();
+    }
+
 }

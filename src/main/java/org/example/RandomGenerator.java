@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
@@ -23,10 +24,11 @@ public class RandomGenerator {
 
     public void generateFileOfRecords(){
         try {
-            CSVWriter writer = new CSVWriter(nameFile ,false);
-            writer.write("X,Y");
-            writer.closeFile();
-            writer = new CSVWriter(nameFile ,true);
+//            CSVWriter writer = new CSVWriter(nameFile ,false);
+//            writer.write("X,Y");
+//            writer.closeFile();
+            new FileWriter(nameFile , false).close(); // Otwórz i zamknij plik, aby go wyczyścić
+            CSVWriter writer = new CSVWriter(nameFile ,true);
             for (int i = 0; i < numberOfRecords; i++) {
                 Record newRecord = generateRecord();
                 writer.write(newRecord.recordToString());
