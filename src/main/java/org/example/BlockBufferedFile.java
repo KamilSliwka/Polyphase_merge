@@ -98,8 +98,10 @@ public class BlockBufferedFile {
 
     //zapis niepełniej strony
     public void writeBufferPage(){
-        writePage();
-        discOperation++;
-        writeBufferIndex = 0;
+        if(!writeBuffer.isEmpty()) {
+            writePage();
+            discOperation++;
+            writeBufferIndex = 0;
+        }
     }
 }

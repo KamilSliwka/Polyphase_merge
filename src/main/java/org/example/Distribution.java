@@ -40,10 +40,14 @@ public class Distribution {
         int index = 0;
         int fibNumber = 0;
         int temp =1;
+        int fn = 1;
+        int fnMinus1 = 0;
         Tape current = tapes.get(index);
         Record lastRecord = inputFile.getNextRecord();
         current.getBlockBufferedFile().setNextRecord(lastRecord);
         current.increaseSeries();
+        Record coalesce = null;
+        boolean newSeries = true;
         while(true){
             Record currentRecord = inputFile.getNextRecord();
             if(currentRecord == null){
@@ -52,16 +56,26 @@ public class Distribution {
                 break;
             }
             if(currentRecord.compareTo(lastRecord)<0){ //jesli current record miejszy to seria zakończona
-                if(FibonacciChecker.isFibonacci(current.getSeries())&&FibonacciChecker.isFibonacci(tapes.get(checkout(index)).getSeries() + current.getSeries()) ){
+                if(current.getSeries()==fn){
+                    int x = fn;
+                    fn = fnMinus1+fn;
+                    fnMinus1=x;
                     fibNumber = temp;
                     temp = 0;
                     index++;
                     index = index % 2;
                     current = tapes.get(index);
+                    if(coalesce !=null && currentRecord.compareTo(coalesce)>0){
+                        newSeries =false;
+                    }
+                    coalesce = lastRecord;
 
                 }
-                temp++;
-                current.increaseSeries();
+                if(newSeries) {
+                    temp++;
+                    current.increaseSeries();
+                }
+                newSeries = true;
             }
             current.getBlockBufferedFile().setNextRecord(currentRecord);
             lastRecord =currentRecord;
@@ -70,8 +84,12 @@ public class Distribution {
         }
 
         int discOperation = inputFile.getDiscOperation()+tapes.get(0).getBlockBufferedFile().getDiscOperation()+tapes.get(1).getBlockBufferedFile().getDiscOperation();
-        temp = tapes.get(checkout(index)).getSeries() + fibNumber;
-        int numberOfDummySeries = temp - current.getSeries();
+        int numberOfDummySeries = 0;
+        if(!FibonacciChecker.isFibonacci(tapes.get(checkout(index)).getSeries()+ current.getSeries())){
+            temp = tapes.get(checkout(index)).getSeries() + fibNumber;
+            numberOfDummySeries = temp - current.getSeries();
+
+        }
 
         return Arrays.asList(numberOfDummySeries,discOperation);
 
