@@ -1,99 +1,117 @@
 package org.example;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Distribution {
+    private static final int NUMBER_OF_TAPES = 2;
     private String inputFileName;
 
     private ArrayList<String> tapesName;
 
+    private  ArrayList<Tape> tapes;
 
-    public Distribution(String inputFileName, ArrayList<String> tapes) {
+    private int currentTapeIndex ;
+    private int amountOfAddSeries;
+    private int counter;
+    private int currentFibNumber;
+    private int previousFibNumber;
+
+    private void initialize() {
+        this.currentTapeIndex  = 0;
+        this.amountOfAddSeries = 0;
+        this.counter =0;
+        this.currentFibNumber = 1;
+        this.previousFibNumber = 0;
+    }
+    public Distribution(String inputFileName, ArrayList<String> tapesName) {
         this.inputFileName = inputFileName;
-        this.tapesName = tapes;
+        this.tapesName = tapesName;
+        this.tapes = new ArrayList<>();
+        tapes.add(new Tape(new BlockBufferedFile(tapesName.get(0))));
+        tapes.add(new Tape(new BlockBufferedFile(tapesName.get(1))));
+        initialize();
+
     }
 
+    private Tape getTapeAtOffset(int offset) {
+        return tapes.get((currentTapeIndex + offset) % NUMBER_OF_TAPES);
+    }
 
+    private Record distributeFirstRecord(BlockBufferedFile input){
+        Record lastRecord = input.getNextRecord();
+        getTapeAtOffset(0).getBlockBufferedFile().setNextRecord(lastRecord);
+        counter++;
+        getTapeAtOffset(0).increaseSeries();
+        return lastRecord;
+    }
+    private void writeAllTapes() {
+        tapes.forEach(tape -> tape.getBlockBufferedFile().writeBufferPage());
+    }
+
+    private void updateFibonacciSeries(){
+        int temp = currentFibNumber;
+        currentFibNumber = previousFibNumber+currentFibNumber;
+        previousFibNumber=temp;
+    }
+    private boolean isFibonacciSeriesFull() {
+        return getTapeAtOffset(0).getSeries() == currentFibNumber;
+    }
+    private void switchToNextTape() {
+        currentTapeIndex = (currentTapeIndex + 1) % NUMBER_OF_TAPES;
+    }
+    private boolean switchTapeIfSeriesComplete(Record recentRecordFromOtherTape,Record currentRecord){
+        updateFibonacciSeries();
+        amountOfAddSeries = counter;
+        counter = 0;
+        switchToNextTape();
+        return recentRecordFromOtherTape == null || currentRecord.compareTo(recentRecordFromOtherTape) < 0;
+    }
+    private boolean isNewSerie(boolean newSeries){
+        if(newSeries) {
+            counter++;
+            getTapeAtOffset(0).increaseSeries();
+        }
+        return true;
+    }
     private int checkout(int i){
         i = i+1;
         return i%2;
     }
+    private int totalDiscOperation(BlockBufferedFile input){
+        return input.getDiscOperation()+tapes.get(0).getBlockBufferedFile().getDiscOperation()+tapes.get(1).getBlockBufferedFile().getDiscOperation();
+    }
+    private int numberOfDummySeries(){
+        if(!FibonacciChecker.isFibonacci(getTapeAtOffset(1).getSeries()+ getTapeAtOffset(0).getSeries())){
+            int temp = getTapeAtOffset(1).getSeries() + amountOfAddSeries;
+            return temp - getTapeAtOffset(0).getSeries();
+        }
+        return 0;
+    }
+
     public List<Integer> distribute(){
-        try {
-            new FileWriter(tapesName.get(0) , false).close(); // Otwórz i zamknij plik, aby go wyczyścić
-            new FileWriter(tapesName.get(1), false).close(); // Otwórz i zamknij plik, aby go wyczyścić
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
         BlockBufferedFile inputFile = new BlockBufferedFile(inputFileName);
-        Tape firstTape = new Tape(new BlockBufferedFile(tapesName.get(0)));
-        Tape secondTape = new Tape(new BlockBufferedFile(tapesName.get(1)));
-        ArrayList<Tape> tapes = new ArrayList<>();
-        tapes.add(firstTape);
-        tapes.add(secondTape);
-        int index = 0;
-        int fibNumber = 0;
-        int temp =1;
-        int fn = 1;
-        int fnMinus1 = 0;
-        Tape current = tapes.get(index);
-        Record lastRecord = inputFile.getNextRecord();
-        current.getBlockBufferedFile().setNextRecord(lastRecord);
-        current.increaseSeries();
-        Record coalesce = null;
+        Record lastRecord = distributeFirstRecord(inputFile);
+        Record recentRecordFromOtherTape = null;
         boolean newSeries = true;
         while(true){
             Record currentRecord = inputFile.getNextRecord();
             if(currentRecord == null){
-                tapes.get(0).getBlockBufferedFile().writeBufferPage();
-                tapes.get(1).getBlockBufferedFile().writeBufferPage();
-                break;
+               writeAllTapes();
+               break;
             }
-            if(currentRecord.compareTo(lastRecord)<0){ //jesli current record miejszy to seria zakończona
-                if(current.getSeries()==fn){
-                    int x = fn;
-                    fn = fnMinus1+fn;
-                    fnMinus1=x;
-                    fibNumber = temp;
-                    temp = 0;
-                    index++;
-                    index = index % 2;
-                    current = tapes.get(index);
-                    if(coalesce !=null && currentRecord.compareTo(coalesce)>0){
-                        newSeries =false;
-                    }
-                    coalesce = lastRecord;
-
+            if(currentRecord.compareTo(lastRecord)<0){ //jesli tapes.get(currentTapeIndex ) record miejszy to seria zakończona
+                if(isFibonacciSeriesFull()){
+                    newSeries = switchTapeIfSeriesComplete(recentRecordFromOtherTape ,currentRecord);
+                    recentRecordFromOtherTape = lastRecord;
                 }
-                if(newSeries) {
-                    temp++;
-                    current.increaseSeries();
-                }
-                newSeries = true;
+                newSeries = isNewSerie(newSeries);
             }
-            current.getBlockBufferedFile().setNextRecord(currentRecord);
+            getTapeAtOffset(0).getBlockBufferedFile().setNextRecord(currentRecord);
             lastRecord =currentRecord;
-
-
         }
-
-        int discOperation = inputFile.getDiscOperation()+tapes.get(0).getBlockBufferedFile().getDiscOperation()+tapes.get(1).getBlockBufferedFile().getDiscOperation();
-        int numberOfDummySeries = 0;
-        if(!FibonacciChecker.isFibonacci(tapes.get(checkout(index)).getSeries()+ current.getSeries())){
-            temp = tapes.get(checkout(index)).getSeries() + fibNumber;
-            numberOfDummySeries = temp - current.getSeries();
-
-        }
-
-        return Arrays.asList(numberOfDummySeries,discOperation);
-
-
-
+        return Arrays.asList(numberOfDummySeries(),totalDiscOperation(inputFile));
     }
+
 }
