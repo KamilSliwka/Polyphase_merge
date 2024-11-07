@@ -25,8 +25,9 @@ public class Sort {
     public void sorting(){
         List<Integer> results = distribution.distribute();
         int dummySeries = results.get(0);
-        int discOperation = results.get(1);
+        discOperation += results.get(1);
         System.out.println("puste: "+ dummySeries+" operacje: "+discOperation);
+
     }
 
 
