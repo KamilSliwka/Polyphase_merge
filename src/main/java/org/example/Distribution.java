@@ -22,7 +22,7 @@ public class Distribution {
     }
     public Distribution(String inputFileName, ArrayList<String> tapesName) {
         this.inputFileName = inputFileName;
-        this.tapes = new TapesList(tapesName,NUMBER_OF_TAPES,0,new FirstBiggerTapeStrategy());
+        this.tapes = new TapesList(tapesName,NUMBER_OF_TAPES,0,new SecondBiggerTapeStrategy());
         initialize();
 
     }

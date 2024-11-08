@@ -37,10 +37,13 @@ public class TapesList {
     }
 
     public Tape getTapeAtOffset(int offset) {
-        return tapes.get((currentTapeIndex + offset) % numberOfTapes);
+        return tapes.get(strategy.calculateOffset(currentTapeIndex,numberOfTapes,offset));
     }
     public void writeAllTapes() {
         tapes.forEach(tape -> tape.getBlockBufferedFile().writeBufferPage());
+    }
+    public void writeTape(int index) {
+        getTapeAtOffset(index).getBlockBufferedFile().writeBufferPage();
     }
     public void switchToNextTape() {
         currentTapeIndex = strategy.tapeSwitching(currentTapeIndex,numberOfTapes);

@@ -26,6 +26,10 @@ public class BlockBufferedFile {
         this.pageCounter = 0;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     public Record getNextRecord(){
         if(readBufferIndex >= pageSize){
             loadPage();
@@ -104,4 +108,15 @@ public class BlockBufferedFile {
             writeBufferIndex = 0;
         }
     }
+
+    public void clearFile(){
+        new ClearFile(fileName);
+        this.writeBuffer.clear();
+        this.writeBufferIndex = 0;
+        this.readBuffer.clear();
+        this.readBufferIndex = pageSize;
+        this.pageCounter = 0;
+
+    }
+
 }
