@@ -22,7 +22,7 @@ public class Distribution {
     }
     public Distribution(String inputFileName, ArrayList<String> tapesName) {
         this.inputFileName = inputFileName;
-        this.tapes = new TapesList(tapesName,NUMBER_OF_TAPES);
+        this.tapes = new TapesList(tapesName,NUMBER_OF_TAPES,0,new FirstBiggerTapeStrategy());
         initialize();
 
     }
@@ -91,7 +91,7 @@ public class Distribution {
             tapes.getTapeAtOffset(0).getBlockBufferedFile().setNextRecord(currentRecord);
             lastRecord =currentRecord;
         }
-        return Arrays.asList(numberOfDummySeries(),totalDiscOperation(inputFile));
+        return Arrays.asList(numberOfDummySeries(),totalDiscOperation(inputFile),tapes.getCurrentTapeIndex());
     }
 
 }
