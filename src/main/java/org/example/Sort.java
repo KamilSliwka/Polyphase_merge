@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.CsvFileCopy.copyCsv;
+
 public class Sort {
     private Distribution distribution;
     private int discOperation;
@@ -21,7 +23,6 @@ public class Sort {
         this.distribution = new Distribution(inputFile,tapes);
         this.phase = new Phase(tapes,0,new FirstBiggerTapeStrategy());
     }
-
     public void sorting(){
         List<Integer> results = distribution.distribute();
         int dummySeries = results.get(0);
@@ -32,6 +33,8 @@ public class Sort {
             phase.getTapes().setCurrentTapeIndex(1);
             phase.getTapes().setStrategy(new SecondBiggerTapeStrategy());
         }
+        //couting operations add
+
         boolean isSorted = phase.phase(dummySeries);
         int index = 0;
         while(!isSorted){
@@ -42,8 +45,8 @@ public class Sort {
         }
         index = phase.getIndexOfCurrentTape();
         //draw 1 tape
-
+        String sourceFilePath = "tape"+ ++index +".csv";
+        String destinationFilePath = "result.csv";
+        copyCsv(sourceFilePath, destinationFilePath);
     }
-
-
 }

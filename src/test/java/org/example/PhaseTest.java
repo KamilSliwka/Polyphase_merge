@@ -69,4 +69,16 @@ public class PhaseTest {
         compareCsvFiles(filePath1, filePath2);
         assertTrue(compareCsvFiles(filePath1, filePath2), "Błędne wartości wynikowe");
     }
+
+    @Test
+    void testPhaseFourth() {
+        preparingFiles("FourthTest");
+        Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy());
+        phase.phase(1);
+        String filePath1 = "tape3.csv";
+        String filePath2 = "InputFilesForPhaseTests/FourthTest/outputTape3.csv";
+        compareCsvFiles(filePath1, filePath2);
+        assertTrue(compareCsvFiles(filePath1, filePath2), "Błędne wartości wynikowe");
+    }
+
 }

@@ -1,15 +1,13 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CsvComparer {
 
-    public static List<double[]> readCsv(String filePath) {
-        List<double[]> records = new ArrayList<>();
+    public static List<Record> readCsv(String filePath) {
+        List<Record> records = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -19,7 +17,7 @@ public class CsvComparer {
                     try {
                         double x = Double.parseDouble(values[0]);
                         double y = Double.parseDouble(values[1]);
-                        records.add(new double[]{x, y});
+                        records.add(new Record(x,y));
                     } catch (NumberFormatException e) {
                         System.out.println("Nieprawidłowy format liczby w pliku " + filePath + ": " + e.getMessage());
                     }
@@ -32,26 +30,33 @@ public class CsvComparer {
         return records;
     }
 
+    public static void writeCsv(String filePath, List<Record> records) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (Record record : records) {
+                String line = record.getX() + "," + record.getY(); // Zakładamy, że Record ma metody getX() i getY()
+                writer.write(line);
+                writer.newLine(); // Przejście do nowej linii
+            }
+            System.out.println("Dane zostały zapisane do pliku: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Błąd przy zapisywaniu do pliku: " + filePath + " - " + e.getMessage());
+        }
+    }
     public static boolean compareCsvFiles(String filePath1, String filePath2) {
-        List<double[]> records1 = readCsv(filePath1);
-        List<double[]> records2 = readCsv(filePath2);
+        List<Record> records1 = readCsv(filePath1);
+        List<Record> records2 = readCsv(filePath2);
 
         if (records1.size() != records2.size()) {
             return false;
         }
 
         for (int i = 0; i < records1.size(); i++) {
-            double[] record1 = records1.get(i);
-            double[] record2 = records2.get(i);
-            if (record1[0] != record2[0] ) {//do tesów porównujemy tylko 1 liczbe
+            Record record1 = records1.get(i);
+            Record record2 = records2.get(i);
+            if (record1.compareTo(record2)!=0) {
                 return false;
             }
-
-//            if (record1[0] != record2[0] || record1[1] != record2[1]) {
-//                return false;
-//            }
         }
-
         return true;
     }
 

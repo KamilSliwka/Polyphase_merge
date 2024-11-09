@@ -8,7 +8,7 @@ public class BlockBufferedFile {
     private String fileName;
 
     private int pageCounter;
-    private final int  pageSize = 5;
+    private final int  pageSize = 256;
     private  ArrayList<Record> writeBuffer;
 
     private int writeBufferIndex;
