@@ -6,7 +6,7 @@ public class App
     {
 //        RandomGenerator randomGenerator = new RandomGenerator(300,"test.csv");
 //        randomGenerator.generateFileOfRecords();
-        Sort sort = new Sort("test.csv");
+        Sort sort = new Sort("InputFilesForDistributionTests/inputTest3.csv");
         sort.sorting();
     }
 }

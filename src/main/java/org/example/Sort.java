@@ -32,7 +32,7 @@ public class Sort {
             phase.getTapes().setCurrentTapeIndex(1);
             phase.getTapes().setStrategy(new SecondBiggerTapeStrategy());
         }
-        phase.phase(dummySeries);
+        //phase.phase(dummySeries);
 
 
     }

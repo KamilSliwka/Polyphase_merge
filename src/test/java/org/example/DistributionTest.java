@@ -26,7 +26,7 @@ public class DistributionTest {
 
     @Test
     void testDistributeOne() {
-        distributionClass = new Distribution("inputTest1.csv", tapes);
+        distributionClass = new Distribution("InputFilesForDistributionTests/inputTest1.csv", tapes);
         List<Integer> results = distributionClass.distribute();
         int expectedNumberOfDummySeries = 2; // Przykładowa oczekiwana liczba
         int expectedDiscOperations = 6; // Przykładowa oczekiwana liczba operacji dyskowych
@@ -36,7 +36,7 @@ public class DistributionTest {
 
     @Test
     void testDistributeTwo() {
-        distributionClass = new Distribution("inputTest2.csv", tapes);
+        distributionClass = new Distribution("InputFilesForDistributionTests/inputTest2.csv", tapes);
         List<Integer> results = distributionClass.distribute();
         int expectedNumberOfDummySeries = 2; // Przykładowa oczekiwana liczba
         int expectedDiscOperations = 6; // Przykładowa oczekiwana liczba operacji dyskowych
@@ -45,7 +45,7 @@ public class DistributionTest {
     }
     @Test
     void testDistributeThree() {
-        distributionClass = new Distribution("inputTest3.csv", tapes);
+        distributionClass = new Distribution("InputFilesForDistributionTests/inputTest3.csv", tapes);
         List<Integer> results = distributionClass.distribute();
         int expectedNumberOfDummySeries = 4; // Przykładowa oczekiwana liczba
         //int expectedDiscOperations = 6; // Przykładowa oczekiwana liczba operacji dyskowych
