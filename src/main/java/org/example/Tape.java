@@ -17,9 +17,10 @@ public class Tape {
         this.series = series;
     }
 
-    public void increaseSeries(){
+    public void increaseSeries() {
         series++;
     }
+
     public BlockBufferedFile getBlockBufferedFile() {
         return blockBufferedFile;
     }

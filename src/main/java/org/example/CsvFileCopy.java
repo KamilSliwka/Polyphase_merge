@@ -14,8 +14,6 @@ public class CsvFileCopy {
             while ((line = reader.readLine()) != null) {
                 writer.write(line + System.lineSeparator());
             }
-            //System.out.println("Plik został pomyślnie skopiowany.");
-
         } catch (IOException e) {
             System.out.println("Wystąpił błąd podczas kopiowania pliku: " + e.getMessage());
         }

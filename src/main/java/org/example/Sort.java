@@ -1,7 +1,5 @@
 package org.example;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +25,11 @@ public class Sort {
         List<Integer> results = distribution.distribute();
         int dummySeries = results.get(0);
         discOperation += results.get(1);
-        System.out.println("puste: "+ dummySeries+" operacje: "+discOperation);
         int currentTapeIndex = results.get(2);
         if(currentTapeIndex==1){
             phase.getTapes().setCurrentTapeIndex(1);
             phase.getTapes().setStrategy(new SecondBiggerTapeStrategy());
         }
-        //couting operations add
 
         boolean isSorted = phase.phase(dummySeries);
         int index = 0;
@@ -41,10 +37,13 @@ public class Sort {
             index = phase.getIndexOfCurrentTape();
             //draw 2 tape
             isSorted =phase.phase(0);
-
         }
+        discOperation += phase.getTotalNumberOfOperations();
+        System.out.println(" operacje: "+discOperation);
+
         index = phase.getIndexOfCurrentTape();
         //draw 1 tape
+
         String sourceFilePath = "tape"+ ++index +".csv";
         String destinationFilePath = "result.csv";
         copyCsv(sourceFilePath, destinationFilePath);
