@@ -53,7 +53,7 @@ public class PhaseTest {
     void testPhaseTwo() {
         preparingFiles("SecondTest");
         Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy());
-        phase.phase(1);
+        phase.phase(4);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/SecondTest/outputTape3.csv";
         compareCsvFiles(filePath1, filePath2);
@@ -63,7 +63,7 @@ public class PhaseTest {
     void testPhaseThree() {
         preparingFiles("ThirdTest");
         Phase phase = new Phase(tapes,0,new FirstBiggerTapeStrategy());
-        phase.phase(1);
+        phase.phase(0);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/ThirdTest/outputTape3.csv";
         compareCsvFiles(filePath1, filePath2);

@@ -32,8 +32,16 @@ public class Sort {
             phase.getTapes().setCurrentTapeIndex(1);
             phase.getTapes().setStrategy(new SecondBiggerTapeStrategy());
         }
-        //phase.phase(dummySeries);
+        boolean isSorted = phase.phase(dummySeries);
+        int index = 0;
+        while(!isSorted){
+            index = phase.getIndexOfCurrentTape();
+            //draw 2 tape
+            isSorted =phase.phase(0);
 
+        }
+        index = phase.getIndexOfCurrentTape();
+        //draw 1 tape
 
     }
 

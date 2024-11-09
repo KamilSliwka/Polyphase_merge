@@ -8,7 +8,7 @@ public class RandomGenerator {
     private int numberOfRecords;
     private String nameFile;
     private double min = 0.0;
-    private double max = 100.0;
+    private double max = 10.0;
     
     public RandomGenerator(int numberOfRecords, String nameFile) {
         this.numberOfRecords = numberOfRecords;
