@@ -33,9 +33,9 @@ public class CsvComparer {
     public static void writeCsv(String filePath, List<Record> records) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Record record : records) {
-                String line = record.getX() + "," + record.getY(); // Zakładamy, że Record ma metody getX() i getY()
+                String line = record.getX() + "," + record.getY();
                 writer.write(line);
-                writer.newLine(); // Przejście do nowej linii
+                writer.newLine();
             }
             System.out.println("Dane zostały zapisane do pliku: " + filePath);
         } catch (IOException e) {

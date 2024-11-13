@@ -109,7 +109,13 @@ public class BlockBufferedFile {
     }
 
     public int nextIndexToReadInFile(){
-        return pageSize*pageCounter + readBufferIndex;
+        if(pageCounter == 0){
+            return 0;
+        }
+        else{
+            int page = pageCounter - 1;
+            return pageSize*page+ readBufferIndex;
+        }
     }
 
     public void clearFile() {

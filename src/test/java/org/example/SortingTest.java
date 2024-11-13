@@ -12,7 +12,7 @@ public class SortingTest {
     @Test
     void testPhaseOne() {
         Sort sort = new Sort("InputFilesForSortTests/FirstTest/input1.csv",true);
-        sort.sorting();
+        sort.sorting(false);
         String filePath1 = "result.csv";
         String filePath2 = "InputFilesForSortTests/FirstTest/output.csv";
         compareCsvFiles(filePath1, filePath2);
@@ -26,7 +26,7 @@ public class SortingTest {
         randomGenerator.generateFileOfRecords();
 
         Sort sort = new Sort("test.csv",ascending);
-        sort.sorting();
+        sort.sorting(false);
 
         List<Record> records = readCsv("test.csv");
         if(ascending) {

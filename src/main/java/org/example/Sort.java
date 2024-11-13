@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.CsvFileCopy.copyCsv;
+import static org.example.PrintFile.printFile;
 
 public class Sort {
     private Distribution distribution;
@@ -22,7 +23,22 @@ public class Sort {
         this.distribution = new Distribution(inputFile,tapes,ascending);
         this.phase = new Phase(tapes,0,new FirstBiggerTapeStrategy(),ascending);
     }
-    public void sorting(){
+    private void printAllTapesExceptCurrent(){
+        System.out.println();
+        System.out.println("Faza: " + phase.getPhaseNumber());
+        printFile(phase.getFileNameAtOffset(1),phase.getOffsetInFile(1));
+        printFile(phase.getFileNameAtOffset(2),phase.getOffsetInFile(2));
+
+    }
+    private void printCurrentTape(){
+        System.out.println();
+        System.out.println("Faza: " + phase.getPhaseNumber());
+        printFile(phase.getFileNameAtOffset(0),phase.getOffsetInFile(0));
+    }
+    public void sorting(boolean print){
+        System.out.println("Plik początkowy: ");
+        printFile("test.csv",0);
+
         List<Integer> results = distribution.distribute();
         int dummySeries = results.get(0);
         discOperation += results.get(1);
@@ -34,20 +50,20 @@ public class Sort {
 
         boolean isSorted = phase.phase(dummySeries);
         int index = 0;
-        int phaseNumber = 1;
         while(!isSorted){
-            index = phase.getIndexOfCurrentTape();
-            //draw 2 tape
+            if(print) {
+                printAllTapesExceptCurrent();
+            }
             isSorted =phase.phase(0);
-            phaseNumber++;
         }
+
         discOperation += phase.getTotalNumberOfOperations();
         System.out.println("Liczba operacji dyskowych: "+ discOperation);
-        System.out.println("Liczba faz sortowania: "+ phaseNumber);
+        System.out.println("Liczba faz sortowania: "+ phase.getPhaseNumber());
+
+        printCurrentTape();
 
         index = phase.getIndexOfCurrentTape();
-        //draw 1 tape
-
         String sourceFilePath = "tape"+ ++index +".csv";
         String destinationFilePath = "result.csv";
         copyCsv(sourceFilePath, destinationFilePath);

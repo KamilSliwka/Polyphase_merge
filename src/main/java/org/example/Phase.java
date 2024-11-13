@@ -49,6 +49,18 @@ public class Phase {
         return tapes;
     }
 
+    public int getOffsetInFile(int offset){
+        return getTapes().getTapeAtOffset(offset).getBlockBufferedFile().nextIndexToReadInFile();
+    }
+
+    public int getPhaseNumber() {
+        return phaseNumber;
+    }
+
+    public String getFileNameAtOffset(int offset){
+        return getTapes().getTapeAtOffset(offset).getBlockBufferedFile().getFileName();
+    }
+
     private Record addRestSeriesFromOtherTape(Record firstRecord, int tapeIndex) {
         while (true) {
             Record newRecord = getNextRecord(tapeIndex);
