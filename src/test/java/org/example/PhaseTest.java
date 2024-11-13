@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PhaseTest {
     private ArrayList<String> tapes;
+
+    private boolean ascendingOrder = true;
     @BeforeEach
     void setUp() throws IOException {
         this.tapes = new ArrayList<String>();
@@ -39,7 +41,7 @@ public class PhaseTest {
     @Test
     void testPhaseOne() {
         preparingFiles("FirstTest");
-        Phase phase = new Phase(tapes,0,new FirstBiggerTapeStrategy());
+        Phase phase = new Phase(tapes,0,new FirstBiggerTapeStrategy(),ascendingOrder);
         phase.phase(1);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/FirstTest/outputTape3.csv";
@@ -50,7 +52,7 @@ public class PhaseTest {
     @Test
     void testPhaseTwo() {
         preparingFiles("SecondTest");
-        Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy());
+        Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy(),ascendingOrder);
         phase.phase(4);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/SecondTest/outputTape3.csv";
@@ -60,7 +62,7 @@ public class PhaseTest {
     @Test
     void testPhaseThree() {
         preparingFiles("ThirdTest");
-        Phase phase = new Phase(tapes,0,new FirstBiggerTapeStrategy());
+        Phase phase = new Phase(tapes,0,new FirstBiggerTapeStrategy(),ascendingOrder);
         phase.phase(0);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/ThirdTest/outputTape3.csv";
@@ -71,7 +73,7 @@ public class PhaseTest {
     @Test
     void testPhaseFourth() {
         preparingFiles("FourthTest");
-        Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy());
+        Phase phase = new Phase(tapes,1,new SecondBiggerTapeStrategy(),ascendingOrder);
         phase.phase(1);
         String filePath1 = "tape3.csv";
         String filePath2 = "InputFilesForPhaseTests/FourthTest/outputTape3.csv";

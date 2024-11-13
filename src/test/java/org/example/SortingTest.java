@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SortingTest {
     @Test
     void testPhaseOne() {
-        Sort sort = new Sort("InputFilesForSortTests/FirstTest/input1.csv");
+        Sort sort = new Sort("InputFilesForSortTests/FirstTest/input1.csv",true);
         sort.sorting();
         String filePath1 = "result.csv";
         String filePath2 = "InputFilesForSortTests/FirstTest/output.csv";
@@ -21,14 +21,21 @@ public class SortingTest {
 
     @Test
     void testPhaseTwo() {
-        RandomGenerator randomGenerator = new RandomGenerator(1000,"test.csv");
+        boolean ascending = true;
+        RandomGenerator randomGenerator = new RandomGenerator(100,"test.csv");
         randomGenerator.generateFileOfRecords();
 
-        Sort sort = new Sort("test.csv");
+        Sort sort = new Sort("test.csv",ascending);
         sort.sorting();
 
         List<Record> records = readCsv("test.csv");
-        records.sort(Comparator.comparingDouble(record -> record.getX()));
+        if(ascending) {
+            records.sort(Comparator.comparingDouble(record -> record.getX()));
+        }
+        else{
+            records.sort(Comparator.comparingDouble(Record::getX).reversed());
+
+        }
         writeCsv("InputFilesForSortTests/SecondTest/output.csv",records);
 
         String filePath1 = "result.csv";

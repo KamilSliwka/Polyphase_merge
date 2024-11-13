@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class BlockBufferedFile {
-    private final int pageSize = 10;
+    private final int pageSize =256;
     private String fileName;
     private int pageCounter;
     private ArrayList<Record> writeBuffer;
@@ -106,6 +106,10 @@ public class BlockBufferedFile {
             discOperation++;
             writeBufferIndex = 0;
         }
+    }
+
+    public int nextIndexToReadInFile(){
+        return pageSize*pageCounter + readBufferIndex;
     }
 
     public void clearFile() {

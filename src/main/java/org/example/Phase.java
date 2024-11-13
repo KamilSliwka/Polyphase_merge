@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.example.SortingOrder.compare;
+
 public class Phase {
     private static final int NUMBER_OF_TAPES = 3;
     private TapesList tapes;
@@ -11,13 +13,15 @@ public class Phase {
     private Record firstPotentialRecordForNextPhase;
     private Record secondPotentialRecordForNextPhase;
     private boolean endPhase;
+    private boolean ascendingOrder;
 
-    public Phase(ArrayList<String> tapesName, int currentTapeIndex, SwitchTapeStrategy strategy) {
+    public Phase(ArrayList<String> tapesName, int currentTapeIndex, SwitchTapeStrategy strategy,boolean ascending) {
         this.tapes = new TapesList(tapesName, NUMBER_OF_TAPES, currentTapeIndex, strategy);
         this.phaseNumber = 0;
         this.firstPotentialRecordForNextPhase = null;
         this.secondPotentialRecordForNextPhase = null;
         this.endPhase = false;
+        this.ascendingOrder = ascending;
     }
 
     public int getTotalNumberOfOperations() {
@@ -48,7 +52,7 @@ public class Phase {
     private Record addRestSeriesFromOtherTape(Record firstRecord, int tapeIndex) {
         while (true) {
             Record newRecord = getNextRecord(tapeIndex);
-            if (newRecord == null || newRecord.compareTo(firstRecord) < 0) {
+            if (newRecord == null || compare(newRecord,firstRecord,ascendingOrder)) {
                 if (newRecord == null) {
                     endPhase = true;
                 }
@@ -96,7 +100,7 @@ public class Phase {
     private List<Record> setNextRecords(Record firstRecord, Record secondRecord, int tapeIndex) {
         tapes.getTapeAtOffset(2).getBlockBufferedFile().setNextRecord(secondRecord);
         Record record = getNextRecord(tapeIndex);
-        if (record == null || record.compareTo(secondRecord) < 0) {
+        if (record == null || compare(record,secondRecord,ascendingOrder)) {
             secondPotentialRecordForNextPhase = record;
             if (record == null) {
                 endPhase = true;
@@ -116,7 +120,7 @@ public class Phase {
         Record secondTapeRecord = getNextRecord(1);
 
         while (!endPhase) {
-            if (secondTapeRecord.compareTo(firstTapeRecord) < 0) {
+            if (compare(secondTapeRecord,firstTapeRecord,ascendingOrder)) {
                 List<Record> records = setNextRecords(firstTapeRecord, secondTapeRecord, 1);
                 firstTapeRecord = records.get(0);
                 secondTapeRecord = records.get(1);

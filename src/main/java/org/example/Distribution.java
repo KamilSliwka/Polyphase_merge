@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.example.SortingOrder.compare;
+
 public class Distribution {
     private static final int NUMBER_OF_TAPES = 2;
     private String inputFileName;
@@ -14,15 +16,18 @@ public class Distribution {
     private int currentFibNumber;
     private int previousFibNumber;
 
+    private boolean ascendingOrder;
+
     private void initialize() {
         this.amountOfAddSeries = 0;
         this.counter =0;
         this.currentFibNumber = 1;
         this.previousFibNumber = 0;
     }
-    public Distribution(String inputFileName, ArrayList<String> tapesName) {
+    public Distribution(String inputFileName, ArrayList<String> tapesName,boolean ascending) {
         this.inputFileName = inputFileName;
         this.tapes = new TapesList(tapesName,NUMBER_OF_TAPES,0,new SecondBiggerTapeStrategy());
+        this.ascendingOrder = ascending;
         initialize();
 
     }
@@ -49,7 +54,7 @@ public class Distribution {
         amountOfAddSeries = counter;
         counter = 0;
         tapes.switchToNextTape();
-        return recentRecordFromOtherTape == null || currentRecord.compareTo(recentRecordFromOtherTape) < 0;
+        return recentRecordFromOtherTape == null || compare(currentRecord,recentRecordFromOtherTape,ascendingOrder);
     }
     private boolean isNewSerie(boolean newSeries){
         if(newSeries) {
@@ -81,7 +86,7 @@ public class Distribution {
                tapes.writeAllTapes();
                break;
             }
-            if(currentRecord.compareTo(lastRecord)<0){ //jesli tapes.get(currentTapeIndex ) record miejszy to seria zakończona
+            if(compare(currentRecord,lastRecord,ascendingOrder)){ //czy seria zakończona
                 if(isFibonacciSeriesFull()){
                     newSeries = switchTapeIfSeriesComplete(recentRecordFromOtherTape ,currentRecord);
                     recentRecordFromOtherTape = lastRecord;
