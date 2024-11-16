@@ -13,7 +13,7 @@ public class InputRecord {
         this.scanner = new Scanner(System.in);
     }
 
-    public void add(){
+    public void addx(){
 
         double x = input("x");
         double y = input("y");
@@ -29,6 +29,27 @@ public class InputRecord {
         }
     }
 
+
+    public void add() {
+        try  { // Try-with-resources dla zapisu
+            boolean continueAdding = true;
+            CSVWriter writer = new CSVWriter(nameFile ,false);
+            while (continueAdding) {
+                double x = input("x");
+                double y = input("y");
+                Record record = new Record(x, y);
+
+                writer.write(record.recordToString()); // Zapis rekordu do pliku
+
+                continueAdding = askToContinue();
+            }
+            writer.closeFile();
+        } catch (IOException e) {
+            System.err.println("Błąd: nie udało się zapisać danych do pliku.");
+            e.printStackTrace();
+        }
+    }
+
     private double input(String s) {
 
         double value =0.0;
@@ -40,10 +61,26 @@ public class InputRecord {
                 isValid = true;
             } catch (InputMismatchException e) {
                 System.out.println("Błąd: podano nieprawidłowy format liczby. Spróbuj ponownie.");
-                scanner.next();
+                //scanner.next();
+            }finally {
+                scanner.nextLine(); // czyszczenie bufora wejściowego
             }
         }
 
         return value;
+    }
+
+    private boolean askToContinue() {
+        while (true) {
+            System.out.print("Czy chcesz dodać kolejny rekord? (T/N): ");
+            String input = scanner.nextLine().trim().toUpperCase();
+            if (input.equals("T")) {
+                return true; // Kontynuuj dodawanie rekordów
+            } else if (input.equals("N")) {
+                return false; // Zakończ pętlę
+            } else {
+                System.out.println("Błąd: podaj 'T' dla tak lub 'N' dla nie.");
+            }
+        }
     }
 }

@@ -58,10 +58,12 @@ public class Sort {
         }
 
         discOperation += phase.getTotalNumberOfOperations();
+        System.out.println();
+        printCurrentTape();
+        System.out.println();
         System.out.println("Liczba operacji dyskowych: "+ discOperation);
         System.out.println("Liczba faz sortowania: "+ phase.getPhaseNumber());
 
-        printCurrentTape();
 
         index = phase.getIndexOfCurrentTape();
         String sourceFilePath = "tape"+ ++index +".csv";
