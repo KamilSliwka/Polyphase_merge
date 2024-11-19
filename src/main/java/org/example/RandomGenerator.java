@@ -8,7 +8,7 @@ public class RandomGenerator {
     private int numberOfRecords;
     private String nameFile;
     private double min = 0.0;
-    private double max = 100.0;
+    private double max = 10.0;
 
     public RandomGenerator(int numberOfRecords, String nameFile) {
         this.numberOfRecords = numberOfRecords;
@@ -19,6 +19,10 @@ public class RandomGenerator {
         Random random = new Random();
         double randomRecordX = min + (max - min) * random.nextDouble();
         double randomRecordY = min + (max - min) * random.nextDouble();
+
+//        double randomRecordX = (double) (random.nextInt((int) (max - min + 1)) + (int) min);
+//        double randomRecordY = (double) (random.nextInt((int) (max - min + 1)) + (int) min);
+
         return new Record(randomRecordX, randomRecordY);
     }
 

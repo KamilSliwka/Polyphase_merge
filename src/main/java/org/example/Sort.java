@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.example.CsvFileCopy.copyCsv;
@@ -35,9 +36,9 @@ public class Sort {
         System.out.println("Faza: " + phase.getPhaseNumber());
         printFile(phase.getFileNameAtOffset(0),phase.getOffsetInFile(0));
     }
-    public void sorting(boolean print){
+    public List<Integer> sorting(boolean print){
         System.out.println("Plik początkowy: ");
-        printFile("test.csv",0);
+        //printFile("test.csv",0);
 
         List<Integer> results = distribution.distribute();
         int dummySeries = results.get(0);
@@ -59,7 +60,7 @@ public class Sort {
 
         discOperation += phase.getTotalNumberOfOperations();
         System.out.println();
-        printCurrentTape();
+        //printCurrentTape();
         System.out.println();
         System.out.println("Liczba operacji dyskowych: "+ discOperation);
         System.out.println("Liczba faz sortowania: "+ phase.getPhaseNumber());
@@ -69,5 +70,7 @@ public class Sort {
         String sourceFilePath = "tape"+ ++index +".csv";
         String destinationFilePath = "result.csv";
         copyCsv(sourceFilePath, destinationFilePath);
+
+        return Arrays.asList(discOperation,phase.getPhaseNumber());
     }
 }

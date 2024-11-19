@@ -83,7 +83,7 @@ public class Phase {
         while (counter < numberOfSeries) {
             tapes.getTapeAtOffset(2).getBlockBufferedFile().setNextRecord(record);
             Record currentRecord = getNextRecord(0);
-            if (currentRecord.compareTo(record) < 0) {
+            if(compare(currentRecord,record,ascendingOrder)){
                 counter++;
             }
             record = currentRecord;
