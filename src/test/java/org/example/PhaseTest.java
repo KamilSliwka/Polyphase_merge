@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.example.CsvComparer.compareCsvFiles;
-import static org.example.CsvFileCopy.copyCsv;
+import static org.example.FileCopy.copyCsv;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PhaseTest {

@@ -1,11 +1,11 @@
 package org.example;
 
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class BlockBufferedFile {
-    private final int pageSize =256;
+    private final int pageSize = 5;
     private String fileName;
     private int pageCounter;
     private ArrayList<Record> writeBuffer;
@@ -57,7 +57,83 @@ public class BlockBufferedFile {
         }
     }
 
+
     private void loadPage() {
+        readBuffer.clear();
+        int count = 0;
+
+        try (RandomAccessFile raf = new RandomAccessFile(fileName, "r")) {
+            int lineNumber = pageSize * pageCounter;
+            long offset = (long) lineNumber * 16;
+            raf.seek(offset);
+            while (count < pageSize) {
+                try {
+                    double valueX = raf.readDouble();
+                    double valueY = raf.readDouble();
+                    Record record = new Record(valueX, valueY);
+                    readBuffer.add(record);
+                    count++;
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void writePage() {
+        int count = 0;
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(fileName, true))) {
+            while (count < writeBufferIndex) {
+                Record record = writeBuffer.get(count);
+                dos.writeDouble(record.getX());
+                dos.writeDouble(record.getY());
+                count++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        writeBuffer.clear();
+    }
+
+
+    public int getDiscOperation() {
+        return discOperation;
+    }
+
+    //zapis niepełniej strony
+    public void writeBufferPage() {
+        if (!writeBuffer.isEmpty()) {
+            writePage();
+            discOperation++;
+            writeBufferIndex = 0;
+        }
+    }
+
+    public int nextIndexToReadInFile() {
+        if (pageCounter == 0) {
+            return 0;
+        } else {
+            int page = pageCounter - 1;
+            return pageSize * page + readBufferIndex;
+        }
+    }
+
+    public void clearFile() {
+        new ClearFile(fileName);
+        this.writeBuffer.clear();
+        this.writeBufferIndex = 0;
+        this.readBuffer.clear();
+        this.readBufferIndex = pageSize;
+        this.pageCounter = 0;
+
+    }
+
+    private void loadPageCSV() {
         readBuffer.clear();
         String line;
         int count = 0;
@@ -79,7 +155,7 @@ public class BlockBufferedFile {
         }
     }
 
-    private void writePage() {
+    private void writePageCSV() {
         int count = 0;
         try {
             CSVWriter writer = new CSVWriter(fileName, true);
@@ -93,39 +169,6 @@ public class BlockBufferedFile {
             e.printStackTrace();
         }
         writeBuffer.clear();
-    }
-
-    public int getDiscOperation() {
-        return discOperation;
-    }
-
-    //zapis niepełniej strony
-    public void writeBufferPage() {
-        if (!writeBuffer.isEmpty()) {
-            writePage();
-            discOperation++;
-            writeBufferIndex = 0;
-        }
-    }
-
-    public int nextIndexToReadInFile(){
-        if(pageCounter == 0){
-            return 0;
-        }
-        else{
-            int page = pageCounter - 1;
-            return pageSize*page+ readBufferIndex;
-        }
-    }
-
-    public void clearFile() {
-        new ClearFile(fileName);
-        this.writeBuffer.clear();
-        this.writeBufferIndex = 0;
-        this.readBuffer.clear();
-        this.readBufferIndex = pageSize;
-        this.pageCounter = 0;
-
     }
 
 }

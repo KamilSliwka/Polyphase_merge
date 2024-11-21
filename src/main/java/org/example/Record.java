@@ -43,27 +43,16 @@ public class Record implements Comparable<Record>
         return "" + x + "," + y + "";
     }
 
+    public double vectorLength(){
+        return Math.sqrt(sumOfSquare(this.getX(), this.getY()));
+    }
     private double sumOfSquare(double x ,double y) {
         return Math.pow(x, 2.0) + Math.pow(y, 2.0);
     }
-//    @Override
-//    public int compareTo(Record otherRecord) {
-//        double thisSum = sumOfSquare(this.getX(), this.getY());
-//        double otherSum = sumOfSquare(otherRecord.getX(), otherRecord.getY());
-//
-//        if (thisSum > otherSum) {
-//            return 1;
-//        } else if (thisSum < otherSum) {
-//            return -1;
-//        } else {
-//            return 0;
-//        }
-//    }
-
     @Override
     public int compareTo(Record otherRecord) {
-        double thisSum = this.getX();
-        double otherSum = otherRecord.getX();
+        double thisSum = sumOfSquare(this.getX(), this.getY());
+        double otherSum = sumOfSquare(otherRecord.getX(), otherRecord.getY());
 
         if (thisSum > otherSum) {
             return 1;
@@ -73,5 +62,19 @@ public class Record implements Comparable<Record>
             return 0;
         }
     }
+
+//    @Override
+//    public int compareTo(Record otherRecord) {
+//        double thisSum = this.getX();
+//        double otherSum = otherRecord.getX();
+//
+//        if (thisSum > otherSum) {
+//            return 1;
+//        } else if (thisSum < otherSum) {
+//            return -1;
+//        } else {
+//            return 0;
+//        }
+//    }
 
 }

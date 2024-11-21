@@ -43,7 +43,7 @@ public class App {
         } catch (InputMismatchException e) {
             System.out.println("Błąd: Wprowadź liczbę całkowitą.");
         } finally {
-            scanner.nextLine(); // czyszczenie bufora wejściowego
+            scanner.nextLine();
         }
         return choice;
     }
@@ -57,14 +57,14 @@ public class App {
 
                 if (userInput > 0) {
                     System.out.println("Prawidłowa liczba: " + userInput);
-                    break; // Wyjście z pętli, gdy liczba jest poprawna
+                    break;
                 } else {
                     System.out.println("Błąd: Liczba musi być większa od zera. Spróbuj ponownie.");
                 }
             } catch (Exception e) {
                 System.out.println("Błąd: Wprowadź poprawną liczbę całkowitą.");
             } finally {
-                scanner.nextLine(); // Czyszczenie bufora wejściowego
+                scanner.nextLine();
             }
 
 
@@ -91,30 +91,30 @@ public class App {
         }
     }
     private static void taskOne() {
-        System.out.println("Wykonywanie zadania 1");
+        System.out.println("Wybrano 1");
         boolean ascending = sortOrder();
-        Sort sort = new Sort("test.csv",ascending);
+        Sort sort = new Sort("test.bin",ascending);
         sort.sorting(false);
     }
 
     private static void taskTwo() {
-        System.out.println("Wykonywanie zadania 2");
+        System.out.println("Wybrano 2");
         boolean ascending = sortOrder();
-        Sort sort = new Sort("test.csv",ascending);
+        Sort sort = new Sort("test.bin",ascending);
         sort.sorting(true);
     }
 
     private static void taskThree() {
-        System.out.println("Wykonywanie zadania 3...");
-        InputRecord inputRecord = new InputRecord("test.csv");
+        System.out.println("Wybrano 3");
+        InputRecord inputRecord = new InputRecord("test.bin");
         inputRecord.add();
     }
 
     private static void taskFour() {
-        System.out.println("Wykonywanie zadania 4...");
+        System.out.println("Wybrano 4");
         int numberOfRecords = getNumberOfRecords();
-        RandomGenerator randomGenerator = new RandomGenerator(numberOfRecords,"test.csv");
-        randomGenerator.generateFileOfRecords();
+        RandomGenerator randomGenerator = new RandomGenerator(numberOfRecords,"test.bin");
+        randomGenerator.generateBinFileOfRecords();
     }
 }
 

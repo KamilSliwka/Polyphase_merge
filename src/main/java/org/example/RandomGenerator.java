@@ -1,14 +1,17 @@
 package org.example;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Locale;
 import java.util.Random;
 
 public class RandomGenerator {
     private int numberOfRecords;
     private String nameFile;
     private double min = 0.0;
-    private double max = 10.0;
+    private double max = 100.0;
+
+
+
 
     public RandomGenerator(int numberOfRecords, String nameFile) {
         this.numberOfRecords = numberOfRecords;
@@ -39,4 +42,16 @@ public class RandomGenerator {
             e.printStackTrace();
         }
     }
+    public void generateBinFileOfRecords() {
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(nameFile))) {
+            for (int i = 0; i < numberOfRecords; i++) {
+                Record newRecord = generateRecord();
+                dos.writeDouble(newRecord.getX());
+                dos.writeDouble(newRecord.getY());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
