@@ -6,6 +6,26 @@ import java.util.List;
 
 public class CsvComparer {
 
+
+    public static List<Record> readBinFile(String sourceFilePath) {
+        List<Record> records = new ArrayList<>();
+        try (RandomAccessFile raf = new RandomAccessFile(sourceFilePath, "r")) {
+            while (true) {
+                try {
+                    double x = raf.readDouble(); // Odczytaj 8 bajtów dla X
+                    double y = raf.readDouble(); // Odczytaj 8 bajtów dla Y
+                    Record record = new Record(x, y);
+                    records.add(new Record(x,y));
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+
+        } catch(IOException e){
+            System.out.println("Wystąpił błąd podczas kopiowania pliku: " + e.getMessage());
+        }
+        return records;
+    }
     public static List<Record> readCsv(String filePath) {
         List<Record> records = new ArrayList<>();
 
@@ -28,6 +48,21 @@ public class CsvComparer {
         }
 
         return records;
+    }
+    public static void writeBin(String filePath, List<Record> records) {
+        int count = 0;
+        try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(filePath))) {
+            while (count< records.size()) {
+                Record record = records.get(count);
+                dos.writeDouble(record.getX());
+                dos.writeDouble(record.getY());
+                count++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static void writeCsv(String filePath, List<Record> records) {

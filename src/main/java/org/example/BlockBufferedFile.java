@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class BlockBufferedFile {
-    private final int pageSize = 5;
+    private final int pageSize = 256;
     private String fileName;
     private int pageCounter;
     private ArrayList<Record> writeBuffer;
@@ -119,7 +119,7 @@ public class BlockBufferedFile {
             return 0;
         } else {
             int page = pageCounter - 1;
-            return pageSize * page + readBufferIndex;
+            return pageSize * page + readBufferIndex - 1;//- 1 bo element juz odczytany był aby sprawdzić czy koniec serii
         }
     }
 
@@ -133,7 +133,7 @@ public class BlockBufferedFile {
 
     }
 
-    private void loadPageCSV() {
+    private void loadPagecsv() {
         readBuffer.clear();
         String line;
         int count = 0;
@@ -155,7 +155,7 @@ public class BlockBufferedFile {
         }
     }
 
-    private void writePageCSV() {
+    private void writePagecsv() {
         int count = 0;
         try {
             CSVWriter writer = new CSVWriter(fileName, true);

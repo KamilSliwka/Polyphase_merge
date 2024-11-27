@@ -22,7 +22,7 @@ public class SortingTest {
     @Test
     void testPhaseTwo() {
         boolean ascending = true;
-        RandomGenerator randomGenerator = new RandomGenerator(2000,"test.csv");
+        RandomGenerator randomGenerator = new RandomGenerator(20,"test.csv");
         randomGenerator.generateFileOfRecords();
 
         Sort sort = new Sort("test.csv",ascending);

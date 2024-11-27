@@ -140,7 +140,6 @@ public class Phase {
         tapes.switchToNextTape();
         endPhase = false;
         Record lastRecord = takeFirstRecord();
-        phaseNumber++;
         Record firstTapeRecord = moveSeries(emptySeries, lastRecord);
         Record secondTapeRecord = getNextRecord(1);
 
@@ -149,6 +148,7 @@ public class Phase {
             return true;
         }
 
+        phaseNumber++;
         while (!endPhase) {
             if (compare(secondTapeRecord, firstTapeRecord, ascendingOrder)) {
                 List<Record> records = setNextRecords(firstTapeRecord, secondTapeRecord, 1);

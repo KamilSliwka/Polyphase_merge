@@ -6,6 +6,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.example.CsvComparer.readCsv;
+
 public class PrintFile {
     private static final int SIZE = 20;
 
@@ -21,7 +23,7 @@ public class PrintFile {
                 System.out.print(" , ");
             }
             newLine++;
-            if (newLine == 5) {
+            if (newLine == 3) {
                 newLine = 0;
                 System.out.println();
             }

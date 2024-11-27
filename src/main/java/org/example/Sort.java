@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.example.FileCopy.binToCsv;
+import static org.example.FileCopy.copyCsv;
 import static org.example.PrintFile.printFile;
 
 public class Sort {
@@ -39,11 +40,20 @@ public class Sort {
         printFile(phase.getFileNameAtOffset(0), phase.getOffsetInFile(0));
     }
 
+    private void printTapesAfterDistribution(){
+        System.out.println();
+        System.out.println("Po Dystrybucji: ");
+        printFile("tape1.bin", 0);
+        printFile("tape2.bin", 0);
+    }
     public List<Integer> sorting(boolean print) {
         System.out.println("Plik początkowy: ");
         printFile("test.bin", 0);
 
         List<Integer> results = distribution.distribute();
+
+        printTapesAfterDistribution();
+
         int dummySeries = results.get(0);
         discOperation += results.get(1);
         int currentTapeIndex = results.get(2);
